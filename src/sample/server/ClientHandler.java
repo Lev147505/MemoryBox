@@ -29,8 +29,9 @@ public class ClientHandler implements Data {
             exc.printStackTrace();
         }
 
-        new Thread(() -> {
-
+        server.getExecutorService().submit(new Runnable() {
+            @Override
+            public void run() {
             while (true){
                 try {
                     if (in.available() != 0){
@@ -49,10 +50,11 @@ public class ClientHandler implements Data {
                 }
             }
             for (ClientHandler ch:server.getOpenedBoxes()) {
-                System.out.println(ch.getNick()+" "+"open his MemoryBox\n");
+                System.out.println(ch.getNick()+" "+"open his MemoryBox");
             }
 
-        }).start();
+            }
+        });
     }
 
     private boolean  logIn(String msg) throws IOException{
