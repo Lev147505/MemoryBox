@@ -1,14 +1,13 @@
-package sample;
+package sample.client;
 
 import javafx.fxml.FXML;
 
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import sample.client.Client;
 
 
-public class Controller implements ViewControl{
+public class Controller implements ViewControl {
     @FXML private TextField loginField;
     @FXML private PasswordField passField;
     @FXML private TextField nick;

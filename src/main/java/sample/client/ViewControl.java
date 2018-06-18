@@ -1,4 +1,4 @@
-package sample;
+package sample.client;
 
 public interface ViewControl {
     void logIn();

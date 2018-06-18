@@ -1,6 +1,5 @@
 package sample.client;
 
-import sample.Controller;
 import sample.Data;
 
 import java.io.DataInputStream;

@@ -15,6 +15,7 @@ public class Server implements Data {
 
     private ServerSocket server;
     private Socket socket;
+    private DBOperator dbOperator;
 
     private ExecutorService executorService;
     public ExecutorService getExecutorService() {return executorService;}
@@ -22,18 +23,17 @@ public class Server implements Data {
     private List<ClientHandler> openedBoxes;
     public List<ClientHandler> getOpenedBoxes() {return openedBoxes;}
 
-    private LoginService login;
-    private RegService register;
-    public LoginService getLogin (){return login;}
-    public RegService getRegister() {return register;}
+    private Authorisation auth;
+    public Authorisation getAuth() {return auth;}
+
 
     public Server(){
         try {
+            this.dbOperator = new DBOperator();
             this.server = new ServerSocket(PORT);
             this.executorService = Executors.newCachedThreadPool();
-            this.login = new LoginService();
-            this.register = new RegService();
-            this.openedBoxes = Collections.synchronizedList(new ArrayList<>());
+            this.auth = new Authorisation(this.dbOperator);
+            this.openedBoxes = Collections.synchronizedList(new ArrayList<ClientHandler>());
             System.out.println("Server running and awaiting connections");
             while (true){
                 this.socket = server.accept();
@@ -43,6 +43,14 @@ public class Server implements Data {
             }
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            try {
+                dbOperator.closeDBConnection();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
 
     }
