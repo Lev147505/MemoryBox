@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<HBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.client.controllers.ControllerWorkArea">
+   <children>
+      <VBox prefHeight="400.0" prefWidth="200.0">
+         <children>
+            <Pane prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Label layoutX="7.0" layoutY="18.0" prefHeight="24.0" prefWidth="100.0" text="Your files:">
+                     <font>
+                        <Font name="Chiller" size="26.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane>
+               <children>
+                  <TextArea layoutX="9.0" prefHeight="334.0" prefWidth="174.0" />
+               </children>
+            </Pane>
+         </children></VBox>
+      <VBox prefHeight="400.0" prefWidth="200.0">
+         <children>
+            <Pane prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Label layoutY="18.0" prefHeight="24.0" prefWidth="100.0" text="Current file:">
+                     <font>
+                        <Font name="Chiller" size="26.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <TextArea prefHeight="226.0" prefWidth="200.0" />
+            <Pane prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="14.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="200.0" text="Download" textAlignment="CENTER">
+                     <font>
+                        <Font name="Chiller" size="45.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+         </children></VBox>
+      <VBox prefHeight="400.0" prefWidth="200.0">
+         <children>
+            <Pane prefHeight="50.0" prefWidth="200.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="200.0" text="MemoryBox">
+                     <font>
+                        <Font name="Chiller" size="40.0" />
+                     </font>
+                  </Label>
+               </children>
+            </Pane>
+            <Pane prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button alignment="CENTER" layoutX="30.0" layoutY="8.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="140.0" text="Add Files" textAlignment="CENTER">
+                     <font>
+                        <Font name="Chiller" size="30.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+            <Pane layoutX="10.0" layoutY="60.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <Button alignment="CENTER" layoutX="30.0" layoutY="8.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="140.0" text="Delete Files" textAlignment="CENTER">
+                     <font>
+                        <Font name="Chiller" size="28.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+            <Pane layoutX="10.0" layoutY="160.0" prefHeight="150.0" prefWidth="200.0">
+               <children>
+                  <Button alignment="CENTER" layoutX="30.0" layoutY="11.0" mnemonicParsing="false" prefHeight="123.0" prefWidth="140.0" text="EXIT" textAlignment="CENTER" textFill="#121212" textOverrun="CLIP">
+                     <font>
+                        <Font name="Chiller" size="45.0" />
+                     </font>
+                  </Button>
+               </children>
+            </Pane>
+         </children>
+      </VBox>
+   </children>
+</HBox>
