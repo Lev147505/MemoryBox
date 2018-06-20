@@ -1,6 +1,8 @@
 package sample.client;
 
 import sample.Data;
+import sample.client.controllers.ControllerLoginArea;
+import sample.client.controllers.ControllerWorkArea;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -12,14 +14,15 @@ public class Client implements Data{
     private Socket socket;
     private DataOutputStream out;
     private DataInputStream in;
-    private Controller controller;
+    private ControllerLoginArea controllerLoginArea;
+    private ControllerWorkArea controllerWorkArea;
+    private ScreenManager screenManager;
 
-    public Client(Controller controller){
+    public Client(){
         try{
             this.socket = new Socket(SERVER_URL, PORT);
             this.out = new DataOutputStream(socket.getOutputStream());
             this.in = new DataInputStream(socket.getInputStream());
-            this.controller = controller;
             init();
         }catch (IOException exc){
             exc.printStackTrace();
@@ -36,18 +39,18 @@ public class Client implements Data{
                         if (in.available() != 0) {
                             String msg = in.readUTF();
                             if (msg.startsWith(AUTH_DONE)) {
-                                controller.writeInTextArea("You in your MemoryBox, " + msg.substring(AUTH_DONE.length())+"\n");
-                                //метод для смены окна на рабочее
+                                screenManager.setLogin(true);
+                                screenManager.changeScreen();//смена root на сцене javafx
                                 break;
                             }
                             if (msg.startsWith(REG_DATA_OK)) {
-                                controller.writeInTextArea("Success registration!\nEnter, using your login and password.\n");
+                                controllerLoginArea.writeInTextArea("Success registration!\nEnter, using your login and password.\n");
                             } else if (msg.startsWith(SAME_LOGINPASS)) {
-                                controller.writeInTextArea("Login/Password combination is not unique!\n");
+                                controllerLoginArea.writeInTextArea("Login/Password combination is not unique!\n");
                             } else if (msg.startsWith(SAME_NICK)) {
-                                controller.writeInTextArea("Nick is not unique!\n");
+                                controllerLoginArea.writeInTextArea("Nick is not unique!\n");
                             }else if (msg.startsWith(BUSY_BOX)){
-                                controller.writeInTextArea(msg.substring(BUSY_BOX.length())+"\n");
+                                controllerLoginArea.writeInTextArea(msg.substring(BUSY_BOX.length())+"\n");
                             }
                         }
                     }
@@ -59,6 +62,8 @@ public class Client implements Data{
                     }
                 }catch (IOException exc){
                     exc.printStackTrace();
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }).start();
@@ -78,5 +83,17 @@ public class Client implements Data{
         }catch (IOException exc){
             exc.printStackTrace();
         }
+    }
+
+    public void setControllerLoginArea(ControllerLoginArea controllerLoginArea) {
+        this.controllerLoginArea = controllerLoginArea;
+    }
+
+    public void setControllerWorkArea(ControllerWorkArea controllerWorkArea) {
+        this.controllerWorkArea = controllerWorkArea;
+    }
+
+    public void setScreenManager(ScreenManager screenManager) {
+        this.screenManager = screenManager;
     }
 }

@@ -1,19 +1,25 @@
-package sample.client;
+package sample.client.controllers;
 
 import javafx.fxml.FXML;
 
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import sample.client.Client;
+import sample.client.ViewControl;
 
+public class ControllerLoginArea implements ViewControl {
+    private Client client;
 
-public class Controller implements ViewControl {
     @FXML private TextField loginField;
     @FXML private PasswordField passField;
     @FXML private TextField nick;
     @FXML private TextArea textArea;
 
-    private Client client = new Client(this);
+    public void initControllerLoginArea(Client client){
+        this.client = client;
+        client.setControllerLoginArea(this);
+    }
 
     @FXML
     public void logIn() {
