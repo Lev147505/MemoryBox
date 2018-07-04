@@ -1,4 +1,4 @@
-package sample.server;
+package sample.authservice;
 
 import sample.Data;
 

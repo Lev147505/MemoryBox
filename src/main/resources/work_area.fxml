@@ -2,19 +2,20 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<HBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.client.controllers.ControllerWorkArea">
+<HBox prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.gui.ControllerWorkArea">
    <children>
       <VBox prefHeight="400.0" prefWidth="200.0">
          <children>
             <Pane prefHeight="50.0" prefWidth="200.0">
                <children>
-                  <Label layoutX="7.0" layoutY="18.0" prefHeight="24.0" prefWidth="100.0" text="Your files:">
+                  <Label layoutX="7.0" layoutY="18.0" prefHeight="37.0" prefWidth="121.0" text="List Your files:">
                      <font>
                         <Font name="Chiller" size="26.0" />
                      </font>
@@ -23,11 +24,11 @@
             </Pane>
             <Pane>
                <children>
-                  <TextArea layoutX="9.0" prefHeight="334.0" prefWidth="174.0" />
+                  <ListView fx:id="listView" editable="false" layoutX="9.0" prefHeight="334.0" prefWidth="174.0" />
                </children>
             </Pane>
          </children></VBox>
-      <VBox prefHeight="400.0" prefWidth="200.0">
+      <VBox prefHeight="400.0" prefWidth="250.0">
          <children>
             <Pane prefHeight="50.0" prefWidth="200.0">
                <children>
@@ -38,51 +39,51 @@
                   </Label>
                </children>
             </Pane>
-            <TextArea prefHeight="226.0" prefWidth="200.0" />
+            <TextArea fx:id="currentFileText" prefHeight="251.0" prefWidth="250.0" wrapText="true" />
             <Pane prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="14.0" mnemonicParsing="false" prefHeight="94.0" prefWidth="200.0" text="Download" textAlignment="CENTER">
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="12.0" mnemonicParsing="false" prefHeight="69.0" prefWidth="250.0" text="Download File" textAlignment="CENTER">
                      <font>
-                        <Font name="Chiller" size="45.0" />
+                        <Font name="Chiller" size="33.0" />
                      </font>
                   </Button>
                </children>
             </Pane>
          </children></VBox>
-      <VBox prefHeight="400.0" prefWidth="200.0">
+      <VBox prefHeight="400.0" prefWidth="150.0">
          <children>
             <Pane prefHeight="50.0" prefWidth="200.0">
                <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="50.0" prefWidth="200.0" text="MemoryBox">
+                  <Label alignment="CENTER" contentDisplay="CENTER" layoutX="-3.0" layoutY="-3.0" prefHeight="37.0" prefWidth="157.0" text="MemoryBox">
                      <font>
-                        <Font name="Chiller" size="40.0" />
+                        <Font name="Chiller" size="36.0" />
                      </font>
                   </Label>
                </children>
             </Pane>
             <Pane prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button alignment="CENTER" layoutX="30.0" layoutY="8.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="140.0" text="Add Files" textAlignment="CENTER">
+                  <Button fx:id="uploadFiles" alignment="CENTER" layoutX="11.0" mnemonicParsing="false" onAction="#chooseFiles" prefHeight="84.0" prefWidth="128.0" text="Upload Files" textAlignment="CENTER" wrapText="true">
                      <font>
-                        <Font name="Chiller" size="30.0" />
+                        <Font name="Chiller" size="25.0" />
                      </font>
                   </Button>
                </children>
             </Pane>
             <Pane layoutX="10.0" layoutY="60.0" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button alignment="CENTER" layoutX="30.0" layoutY="8.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="140.0" text="Delete Files" textAlignment="CENTER">
+                  <Button fx:id="deleteCurrentFile" alignment="CENTER" contentDisplay="CENTER" layoutX="11.0" mnemonicParsing="false" onAction="#deleteCurrentFile" prefHeight="84.0" prefWidth="128.0" text="Delete Current File" textAlignment="CENTER" wrapText="true">
                      <font>
-                        <Font name="Chiller" size="28.0" />
+                        <Font name="Chiller" size="23.0" />
                      </font>
                   </Button>
                </children>
             </Pane>
             <Pane layoutX="10.0" layoutY="160.0" prefHeight="150.0" prefWidth="200.0">
                <children>
-                  <Button alignment="CENTER" layoutX="30.0" layoutY="11.0" mnemonicParsing="false" prefHeight="123.0" prefWidth="140.0" text="EXIT" textAlignment="CENTER" textFill="#121212" textOverrun="CLIP">
+                  <Button fx:id="exitBtn" alignment="CENTER" layoutX="11.0" mnemonicParsing="false" onAction="#exitMBox" prefHeight="131.0" prefWidth="128.0" text="EXIT" textAlignment="CENTER" textFill="#121212" textOverrun="CLIP">
                      <font>
-                        <Font name="Chiller" size="45.0" />
+                        <Font name="Chiller" size="40.0" />
                      </font>
                   </Button>
                </children>

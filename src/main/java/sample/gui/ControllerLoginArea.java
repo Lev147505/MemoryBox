@@ -1,20 +1,21 @@
-package sample.client.controllers;
+package sample.gui;
 
 import javafx.fxml.FXML;
 
+import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import sample.client.Client;
-import sample.client.ViewControl;
 
-public class ControllerLoginArea implements ViewControl {
+public class ControllerLoginArea {
     private Client client;
 
     @FXML private TextField loginField;
     @FXML private PasswordField passField;
     @FXML private TextField nick;
     @FXML private TextArea textArea;
+    @FXML private Button exit;
 
     public void initControllerLoginArea(Client client){
         this.client = client;
@@ -43,4 +44,8 @@ public class ControllerLoginArea implements ViewControl {
         textArea.appendText(msg);
     }
 
+    @FXML
+    public void exitMBox(){
+        client.exit();
+    }
 }

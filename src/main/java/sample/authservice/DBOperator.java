@@ -1,7 +1,9 @@
-package sample.server;
+package sample.authservice;
 
 import sample.Data;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.*;
 
 public class DBOperator implements Data{
@@ -60,9 +62,13 @@ public class DBOperator implements Data{
                 return SAME_NICK;
             }
             statement.executeUpdate(sqlRegister);
+            new File(GENERAL_DIR + nick.toLowerCase()).mkdirs();
+            new File(GENERAL_DIR + nick.toLowerCase() + "/list.txt").createNewFile();
         } catch (SQLException e) {
             e.printStackTrace();
-        }finally {
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
             try {
                 if (rs!=null)rs.close();
                 if (statement!=null)statement.close();

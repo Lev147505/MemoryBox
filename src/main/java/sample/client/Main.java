@@ -2,6 +2,7 @@ package sample.client;
 
 import javafx.application.Application;
 import javafx.stage.Stage;
+import sample.gui.ScreenManager;
 
 public class Main extends Application {
     private Client client;
@@ -18,7 +19,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        screenManager = new ScreenManager(primaryStage, client, this);
+        screenManager = new ScreenManager(primaryStage, client);
     }
 
 }

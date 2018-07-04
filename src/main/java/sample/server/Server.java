@@ -1,6 +1,9 @@
 package sample.server;
 
+import sample.authservice.Authorisation;
+import sample.authservice.DBOperator;
 import sample.Data;
+import sample.fileservice.FileManagerServer;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -16,6 +19,7 @@ public class Server implements Data {
     private ServerSocket server;
     private Socket socket;
     private DBOperator dbOperator;
+    private FileManagerServer fileManagerServer;
 
     private ExecutorService executorService;
     public ExecutorService getExecutorService() {return executorService;}
@@ -30,6 +34,7 @@ public class Server implements Data {
     public Server(){
         try {
             this.dbOperator = new DBOperator();
+            this.fileManagerServer = new FileManagerServer();
             this.server = new ServerSocket(PORT);
             this.executorService = Executors.newCachedThreadPool();
             this.auth = new Authorisation(this.dbOperator);
@@ -37,7 +42,7 @@ public class Server implements Data {
             System.out.println("Server running and awaiting connections");
             while (true){
                 this.socket = server.accept();
-                openedBoxes.add(new ClientHandler(this,socket));
+                openedBoxes.add(new ClientHandler(this,socket,fileManagerServer));
                 System.out.println("Client connected");
 
             }
