@@ -52,12 +52,9 @@ public class Client implements Data{
                             elements = msg.split("~");
                             String[] finalElements = elements;
                             switch (elements[0]){
-                                case AUTH_OK: //????????????????????????????ЗДЕСЬ ПРОГРАММА СПОТЫКАЕТСЯ. ЕСЛИ ЗАРЕГИСТРИРОВАТЬ НОВОГО ПОЛЬЗОВАТЕЛЯ
-                                             // И ТУТ ЖЕ НАЖАТЬ КНОПКУ ЧТОБЫ ВОЙТИ ВСЁ ОТРАБАТЫВАЕТ КАК ПОЛОЖЕНО С СЕРВИСА ПРИХОДИТ КЛЮЧЬ AUTH_OK
-                                            // И ИМЕННО В ЭТОТ КЕЙС НЕ ЗАХОДИТ ПОКА НЕ ЗАПУСТИШЬ ЕЩЁ КЛИЕНТА???????????????????????????????????????????
-                                           // ЧТО ЗА МИСТИКА ВИДИМО ГДЕ-ТО С ПОТОКАМИ КОНФЛИКТ??????????????
-                                    screenManager.setLogin(true);// меняем флаговую переменную в ScreenManager на true
+                                case AUTH_OK:
                                     initObservableArrayList();
+                                    screenManager.setLogin(true);// меняем флаговую переменную в ScreenManager на true
                                     screenManager.changeScreen(filesList);//смена root на сцене javafx и трасфер списка файлов через менеджера экранов
                                     break point;
                                 case REG_DATA_OK:
@@ -166,12 +163,14 @@ public class Client implements Data{
         String[] elements;
         while (true){
             if (in.available() != 0){
-                while (in.available() != 0&&(str = in.readUTF()).startsWith(INIT_OAL)){
+                str = in.readUTF();
+                if (str.startsWith(EMPTY_FILE)){
+                    break;
+                }
+                if(str.startsWith(INIT_OAL)){
                     elements = str.split("~");
                     filesList.add(elements[elements.length-1]);
                 }
-                break;
-
             }
         }
     }

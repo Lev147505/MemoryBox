@@ -15,6 +15,7 @@ public interface Data {
     String DROP_OK = "/filewasdropped";
     String EXIT_OK = "exitdone";
 
+    String EMPTY_FILE = "/empty";
     String SAME_NICK = "/nickisallreadyinuse";
     String SAME_LOGINPASS = "/ununiqueloginpass";
     String BUSY_BOX =  "/allreadyinuse";

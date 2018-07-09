@@ -148,12 +148,18 @@ public class ClientHandler implements Data {
     }
 
     private void sendListFile(){
+        System.out.println();
         String str;
         try {
             BufferedReader in = new BufferedReader(new FileReader( GENERAL_DIR + nick.toLowerCase() + "/list.txt"));
-            while ((str = in.readLine()) != null){
-                sendMsg(INIT_OAL + "~" + str);
+            while (true){
+                while ((str = in.readLine()) != null){
+                    sendMsg(INIT_OAL + "~" + str);
+                }
+                break;
             }
+            sendMsg(EMPTY_FILE);
+            in.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
