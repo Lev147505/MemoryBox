@@ -26,7 +26,6 @@ public class DBOperator implements Data{
 
     public String findNickByLoginPass(String login, String password){
         String sqlQuery = "SELECT nick FROM users WHERE login = '" + login + "' AND password = '" + password + "';";
-        System.out.println(sqlQuery);
         try {
             statement = connection.createStatement();
             rs = statement.executeQuery(sqlQuery);
@@ -53,7 +52,6 @@ public class DBOperator implements Data{
         try {
             statement = connection.createStatement();
             rs = statement.executeQuery(sqlQueryLogPass);
-            System.out.println(rs);
             if (rs.next()){
                 return SAME_LOGINPASS;
             }
@@ -77,6 +75,27 @@ public class DBOperator implements Data{
             }
         }
         return REG_DATA_OK;
+    }
+
+    public int getRegisteredUsers(){
+        String sqlQueryStatistic = "SELECT COUNT(`id_users`) FROM `users`;";
+        try {
+            statement = connection.createStatement();
+            rs = statement.executeQuery(sqlQueryStatistic);
+            if (rs.next()){
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (rs!=null)rs.close();
+                if (statement!=null)statement.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }
+        return 0;
     }
 
 }

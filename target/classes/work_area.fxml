@@ -39,10 +39,10 @@
                   </Label>
                </children>
             </Pane>
-            <TextArea fx:id="currentFileText" prefHeight="251.0" prefWidth="250.0" wrapText="true" />
+            <TextArea fx:id="currentFileText" editable="false" prefHeight="251.0" prefWidth="250.0" wrapText="true" />
             <Pane prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="12.0" mnemonicParsing="false" prefHeight="69.0" prefWidth="250.0" text="Download File" textAlignment="CENTER">
+                  <Button alignment="CENTER" contentDisplay="CENTER" layoutY="12.0" mnemonicParsing="false" onAction="#chooseDownloadFile" prefHeight="69.0" prefWidth="250.0" text="Download This File" textAlignment="CENTER">
                      <font>
                         <Font name="Chiller" size="33.0" />
                      </font>
@@ -63,7 +63,7 @@
             </Pane>
             <Pane prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <Button fx:id="uploadFiles" alignment="CENTER" layoutX="11.0" mnemonicParsing="false" onAction="#chooseFiles" prefHeight="84.0" prefWidth="128.0" text="Upload Files" textAlignment="CENTER" wrapText="true">
+                  <Button fx:id="uploadFiles" alignment="CENTER" layoutX="11.0" mnemonicParsing="false" onAction="#chooseUploadFiles" prefHeight="84.0" prefWidth="128.0" text="Upload Files" textAlignment="CENTER" wrapText="true">
                      <font>
                         <Font name="Chiller" size="25.0" />
                      </font>

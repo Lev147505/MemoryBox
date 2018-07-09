@@ -32,6 +32,7 @@ public class Client implements Data{
             this.out = new DataOutputStream(socket.getOutputStream());
             this.in = new DataInputStream(socket.getInputStream());
             this.filesList = FXCollections.observableArrayList();
+            this.clientActive = true;
             init();
         }catch (IOException exc){
             exc.printStackTrace();
@@ -42,53 +43,83 @@ public class Client implements Data{
         new Thread(new Runnable() {
             @Override
             public void run() {
-                clientActive = true;
                 String msg;
                 String[] elements;
                 try {
-                    while (clientActive) {
+                    point:while (clientActive) {
                         if (in.available() != 0) {
                             msg = in.readUTF();
-                            if (msg.startsWith(AUTH_DONE)) {
-                                screenManager.setLogin(true);// меняем флаговую переменную в ScreenManager на true
-                                initObservableArrayList();
-                                screenManager.changeScreen(filesList);//смена root на сцене javafx и трасфер списка файлов через менеджера экранов
-                                break;
-                            }
-                            if (msg.startsWith(REG_DATA_OK)) {
-                                controllerLoginArea.writeInTextArea("Success registration!\nEnter, using your login and password.\n");
-                            } else if (msg.startsWith(SAME_LOGINPASS)) {
-                                controllerLoginArea.writeInTextArea("Login/Password combination is not unique!\n");
-                            } else if (msg.startsWith(SAME_NICK)) {
-                                controllerLoginArea.writeInTextArea("Nick is not unique!\n");
-                            }else if (msg.startsWith(BUSY_BOX)){
-                                controllerLoginArea.writeInTextArea(msg.substring(BUSY_BOX.length())+"\n");
+                            elements = msg.split("~");
+                            String[] finalElements = elements;
+                            switch (elements[0]){
+                                case AUTH_OK: //????????????????????????????ЗДЕСЬ ПРОГРАММА СПОТЫКАЕТСЯ. ЕСЛИ ЗАРЕГИСТРИРОВАТЬ НОВОГО ПОЛЬЗОВАТЕЛЯ
+                                             // И ТУТ ЖЕ НАЖАТЬ КНОПКУ ЧТОБЫ ВОЙТИ ВСЁ ОТРАБАТЫВАЕТ КАК ПОЛОЖЕНО С СЕРВИСА ПРИХОДИТ КЛЮЧЬ AUTH_OK
+                                            // И ИМЕННО В ЭТОТ КЕЙС НЕ ЗАХОДИТ ПОКА НЕ ЗАПУСТИШЬ ЕЩЁ КЛИЕНТА???????????????????????????????????????????
+                                           // ЧТО ЗА МИСТИКА ВИДИМО ГДЕ-ТО С ПОТОКАМИ КОНФЛИКТ??????????????
+                                    screenManager.setLogin(true);// меняем флаговую переменную в ScreenManager на true
+                                    initObservableArrayList();
+                                    screenManager.changeScreen(filesList);//смена root на сцене javafx и трасфер списка файлов через менеджера экранов
+                                    break point;
+                                case REG_DATA_OK:
+                                    controllerLoginArea.writeInTextArea("Success registration!\nEnter, using your login and password.\n");
+                                    break;
+                                case SAME_LOGINPASS:
+                                    controllerLoginArea.writeInTextArea("Login/Password combination is not unique!\n");
+                                    break;
+                                case SAME_NICK:
+                                    controllerLoginArea.writeInTextArea("Nick is not unique!\n");
+                                    break;
+                                case BUSY_BOX:
+                                    controllerLoginArea.writeInTextArea(elements[1] + " " + elements[2]+" !!!\n");
+                                    break;
+                                case STATISTIC:
+                                    Platform.runLater(() -> controllerLoginArea.setStatistic(finalElements[1], finalElements[2]));
+                                    break;
+                                case INFO_ASK:
+                                    controllerLoginArea.appendTextAreaInfo(elements[elements.length-1]);
+                                    break;
+                                case EXIT_OK:
+                                    socket.close();
+                                    out.close();
+                                    in.close();
+                                    Platform.runLater(() -> screenManager.closePrimary());
+                                    clientActive = false;
+                                    break;
                             }
                         }
                     }
                     while (clientActive) {
                         if (in.available() != 0){
                             msg = in.readUTF();
-                            if (msg.startsWith(REFRESH_LIST)){
-                                elements = msg.split("~");
-                                String[] finalElements = elements;
-                                Platform.runLater(() -> {
-                                    filesList.add(finalElements[finalElements.length-1]);
-                                    filesList.forEach((str) -> sendMsg(REFRESH_LIST + "~" + str));
-                                });//Лютая штука для корректировки элемента UI вне потокак FX Application
-                                //В этом же потоке шлём всю коллекцию файлов на сервер чтобы переписать list.txt
-                            }
-                            if (msg.startsWith(SHOW_FILE)){
-                                elements = msg.split("~");
-                                controllerWorkArea.appendCurrentFileText(elements[elements.length-1] + "\n");
-                            }
-                            if (msg.startsWith(DROP_OK)){
-                                elements = msg.split("~");
-                                String[] finalElements = elements;
-                                Platform.runLater(() -> {
-                                    filesList.remove(finalElements[finalElements.length-1]);
-                                    filesList.forEach((str) -> sendMsg(REFRESH_LIST + "~" + str));
-                                });
+                            elements = msg.split("~");
+                            String[] finalElements = elements;
+                            switch (elements[0]){
+                                case DOWNLOAD_ASK:
+                                    controllerWorkArea.getFileManagerClient().writeDownloadFile(in,elements[elements.length-1]);
+                                    break;
+                                case REFRESH_LIST:
+                                    Platform.runLater(() -> {
+                                        filesList.add(finalElements[finalElements.length-1]);
+                                        filesList.forEach((str) -> sendMsg(REFRESH_LIST + "~" + str));
+                                    });//Лютая штука для корректировки элемента UI вне потокак FX Application
+                                    //В этом же потоке шлём всю коллекцию файлов на сервер чтобы переписать list.txt;
+                                    break;
+                                case SHOW_FILE:
+                                    controllerWorkArea.appendCurrentFileText(elements[elements.length-1] + "\n");
+                                    break;
+                                case DROP_OK:
+                                    Platform.runLater(() -> {
+                                        filesList.remove(finalElements[finalElements.length-1]);
+                                        filesList.forEach((str) -> sendMsg(REFRESH_LIST + "~" + str));
+                                    });
+                                    break;
+                                case EXIT_OK:
+                                    socket.close();
+                                    out.close();
+                                    in.close();
+                                    Platform.runLater(() -> screenManager.closePrimary());
+                                    clientActive = false;
+                                    break;
                             }
                         }
                     }
@@ -112,7 +143,7 @@ public class Client implements Data{
 
     public void auth(String login, String password){
         try {
-            out.writeUTF(AUTH_ASK + " " + login + " " + password);
+            out.writeUTF(AUTH_ASK + "~" + login + "~" + password);
         }catch (IOException exc){
             exc.printStackTrace();
         }
@@ -120,22 +151,14 @@ public class Client implements Data{
 
     public void reg(String login, String password, String nickName){
         try {
-            out.writeUTF(REG_ASK + " " + login + " " + password + " " + nickName);
+            out.writeUTF(REG_ASK + "~" + login + "~" + password + "~" + nickName);
         }catch (IOException exc){
             exc.printStackTrace();
         }
     }
 
     public void exit(){
-        try {
-            clientActive = false;
-            socket.close();
-            out.close();
-            in.close();
-            screenManager.closePrimary();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        sendMsg(EXIT_ASK);
     }
 
     private void initObservableArrayList() throws Exception{
@@ -144,7 +167,7 @@ public class Client implements Data{
         while (true){
             if (in.available() != 0){
                 while (in.available() != 0&&(str = in.readUTF()).startsWith(INIT_OAL)){
-                    elements = str.split("\\s");
+                    elements = str.split("~");
                     filesList.add(elements[elements.length-1]);
                 }
                 break;

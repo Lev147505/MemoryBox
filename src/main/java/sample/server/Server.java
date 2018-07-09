@@ -44,7 +44,7 @@ public class Server implements Data {
                 this.socket = server.accept();
                 openedBoxes.add(new ClientHandler(this,socket,fileManagerServer));
                 System.out.println("Client connected");
-
+                statistic();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -65,6 +65,19 @@ public class Server implements Data {
             if (box.getNick().equals(nick))return true;
         }
         return false;
+    }
+
+    public boolean exitUser(ClientHandler client){
+        if (openedBoxes.remove(client)){
+            statistic();
+            return true;
+        }
+        return false;
+    }
+
+    public void statistic(){
+        System.out.println("Size: " + openedBoxes.size());
+        openedBoxes.forEach((user) -> user.sendMsg(STATISTIC + "~" + dbOperator.getRegisteredUsers() + "~" + openedBoxes.size()));
     }
 
 }

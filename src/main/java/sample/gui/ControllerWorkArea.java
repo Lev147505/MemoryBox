@@ -8,11 +8,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import sample.Data;
 import sample.client.Client;
 import sample.fileservice.FileManagerClient;
 
-public class ControllerWorkArea{
+import java.io.DataInputStream;
+import java.io.File;
+
+public class ControllerWorkArea implements Data{
 
     private Client client;
     private FileManagerClient fileManagerClient;
@@ -38,7 +43,7 @@ public class ControllerWorkArea{
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 currentFile = newValue;
-                client.sendMsg(Data.SHOW_FILE + "~" + newValue);
+                client.sendMsg(SHOW_FILE + "~" + newValue);
                 currentFileText.clear();
             }
         });
@@ -48,9 +53,17 @@ public class ControllerWorkArea{
         currentFileText.appendText(text);
     }
 
+    @FXML
     public void deleteCurrentFile(){
         if (currentFile != null){
-            client.sendMsg(Data.DROP_FILE + "~" + currentFile);
+            client.sendMsg(DROP_FILE + "~" + currentFile);
+        }
+    }
+
+    @FXML
+    public void chooseDownloadFile(){
+        if (currentFile != null){
+            fileManagerClient.setDownloadedFile(client,currentFile);
         }
     }
 
@@ -60,6 +73,9 @@ public class ControllerWorkArea{
     }
 
     @FXML
-    public  void chooseFiles(){fileManagerClient.uploadFile(client);}
+    public  void chooseUploadFiles(){fileManagerClient.uploadFile(client);}
 
+    public FileManagerClient getFileManagerClient() {
+        return fileManagerClient;
+    }
 }

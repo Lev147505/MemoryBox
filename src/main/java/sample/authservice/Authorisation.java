@@ -17,5 +17,4 @@ public class Authorisation implements Data {
     public String checkNewUserData(String login, String password,String nick){
         return dbOperator.checkRegistrationData(login,password,nick);
     }
-
 }

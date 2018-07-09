@@ -1,5 +1,6 @@
 package sample.fileservice;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -17,19 +18,20 @@ public class FileManagerClient implements Data {
     private FileChooser fileChooser;
     private ObservableList<String> filesList;
 
+    BufferedReader in = null;
+    PrintWriter out = null;
+
     public FileManagerClient(){
         this.file = null;
         this.newFile = null;
         this.fileExtension = null;
         this.subStage = new Stage();
         this.fileChooser = new FileChooser();
-        fileChooser.setTitle("Uploading Files in MemoryBox...");
         fileChooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
     }
 
     public void uploadFile(Client client){
-
-        BufferedReader in = null;
+        fileChooser.setTitle("Uploading Files in MemoryBox...");
         file = fileChooser.showOpenDialog(subStage);
 
         if (file != null){
@@ -55,12 +57,30 @@ public class FileManagerClient implements Data {
         }
     }
 
-    public boolean deleteFile(String fileName) {
-        return false;
+    public void setDownloadedFile(Client client, String currentFile){
+        fileChooser.setTitle("Downloading Files out of MemoryBox...");
+        file = fileChooser.showSaveDialog(subStage);
+        client.sendMsg(DOWNLOAD_ASK + "~" + currentFile);
     }
 
-    public String generateFilePath(String fileName, String nick){
-        return GENERAL_DIR+nick+"/"+fileName;
+    public void writeDownloadFile(DataInputStream in, String firstRow){
+        String elements[];
+        String msg;
+        if (file != null){
+            try {
+                out = new PrintWriter(file.getAbsolutePath());
+                out.println(firstRow);
+                while (in.available() != 0 && (msg = in.readUTF()).startsWith(DOWNLOAD_ASK)){
+                    elements = msg.split("~");
+                    out.println(elements[elements.length-1]);
+                }
+                out.close();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private String getFileExtension(String str) {

@@ -1,3 +1,0 @@
-TEST.txt
-TEST2.txt
-TEST1.txt

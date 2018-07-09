@@ -5,7 +5,8 @@ import java.io.*;
 
 public class FileManagerServer implements Data {
 
-    public void uploadFile(String nick, DataInputStream in, String fileName, String firsStr) {
+    public void uploadFile(String nick, DataInputStream in, String fileName, String firsRow) {
+        PrintWriter out = null;
         String elements[];
         String msg;
         try {
@@ -13,23 +14,26 @@ public class FileManagerServer implements Data {
             if (!newFile.exists()){
                 newFile.createNewFile();
             }
-            PrintWriter out = new PrintWriter(newFile.getAbsolutePath());
-            out.println(firsStr);
+            out = new PrintWriter(newFile.getAbsolutePath());
+            out.println(firsRow);
             while (in.available() != 0 && (msg = in.readUTF()).startsWith(UP_FILE)){
                 elements = msg.split("~");
                 out.println(elements[2]);
             }
-            out.close();
 
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if (out != null){
+                out.close();
+            }
         }
     }
 
     public void refreshList(String nick, DataInputStream in, String firsStr){
+        PrintWriter out = null;
         String elements[];
         String msg;
-        PrintWriter out = null;
         try {
             out = new PrintWriter(GENERAL_DIR + nick + "/list.txt");
             out.println(firsStr);
@@ -47,12 +51,60 @@ public class FileManagerServer implements Data {
     }
 
     public void showCurrentFile(String nick, DataOutputStream out, String fileName){
-        String str;
         BufferedReader in = null;
+        String str;
         try {
             in = new BufferedReader(new FileReader(GENERAL_DIR + nick + "/" + fileName));
             while ((str = in.readLine()) != null){
                 out.writeUTF(SHOW_FILE + "~" + str);
+                out.flush();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (in != null){
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void sendCurrentFile(String nick, DataOutputStream out, String fileName){
+        BufferedReader in = null;
+        String str;
+        try {
+            in = new BufferedReader(new FileReader(GENERAL_DIR + nick + "/" + fileName));
+            while ((str = in.readLine()) != null){
+                out.writeUTF(DOWNLOAD_ASK + "~" + str);
+                out.flush();
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            if (in != null){
+                try {
+                    in.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void getInfoFile (DataOutputStream out){
+        BufferedReader in = null;
+        String str;
+        try {
+            in = new BufferedReader(new FileReader("src/main/resources/infoMBox.txt"));
+            while ((str = in.readLine()) != null){
+                out.writeUTF(INFO_ASK + "~" + str);
                 out.flush();
             }
         } catch (FileNotFoundException e) {

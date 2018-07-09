@@ -30,7 +30,7 @@ public class ScreenManager {
         loginLoader = new FXMLLoader(getClass().getClassLoader().getResource("login_area.fxml"));
         loginGUI = loginLoader.load();
         controllerLoginArea = loginLoader.getController();
-        controllerLoginArea.initControllerLoginArea(client);
+        controllerLoginArea.initControllerLoginArea(client,primaryStage);
 
         //создание root`а для рабочего окна, получение контроллера и его иницализация в клиенте
         //передача ссылки на объект FileManagerClient контроллеру
